@@ -497,3 +497,60 @@ Example Curl Commands:
 Clean Up
    To stop the application and remove containers, networks, and volumes, run:
    docker-compose down
+
+
+# 1. GroceryItem (inventory_level)
+   This table stores the details of each grocery item available for booking.
+
+
+CREATE TABLE grocery_item (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+price DECIMAL(10, 2) NOT NULL,
+inventory_level INT NOT NULL
+);
+
+# 2. User (user_data)
+   This table stores user details such as their name, email, password, phone number, and balance.
+
+
+CREATE TABLE user_data (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL,
+phone_number VARCHAR(15),
+current_balance DECIMAL(10, 2) NOT NULL
+);
+
+# 3. Order (orders)
+   This table stores the order information including the user ID (who placed the order) and the total amount for the order.
+
+
+CREATE TABLE orders (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT NOT NULL,
+total_amount DECIMAL(10, 2) NOT NULL,
+FOREIGN KEY (user_id) REFERENCES user_data(id)
+);
+
+# 4. OrderItem (order_item)
+   This table stores the relationship between orders and the grocery items. Each order can have multiple items.
+
+CREATE TABLE order_item (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT NOT NULL,
+grocery_item_id BIGINT NOT NULL,
+quantity INT NOT NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id),
+FOREIGN KEY (grocery_item_id) REFERENCES grocery_item(id)
+);
+
+Database Design Explanation
+GroceryItem Table: Stores all the details related to grocery items like their name, price, and inventory level. The inventory level helps in tracking how much of the item is available for booking.
+
+User Table: Stores all the details about users who make the orders. The current_balance field can be useful for handling order payments and user balances.
+
+Order Table: Tracks individual orders placed by users. Each order has a reference to the user placing it (via user_id) and the total amount of the order.
+
+OrderItem Table: A many-to-one relationship between orders and grocery items, with the quantity of each item specified in the order. An order can have multiple items, and an item can be part of many orders.
