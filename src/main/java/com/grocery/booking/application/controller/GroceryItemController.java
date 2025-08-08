@@ -56,6 +56,7 @@ public class GroceryItemController {
 
     @PutMapping("/grocery-items/{id}")
     public ResponseEntity<?> updateGroceryItem(@PathVariable Long id, @RequestBody GroceryItem groceryItem) {
+        System.out.println("Enterned in the updateGroceryItem");
         try {
             groceryItemService.updateGroceryItem(id, groceryItem);
             return ResponseEntity.ok(new MessageResponse("Grocery item updated successfully"));
